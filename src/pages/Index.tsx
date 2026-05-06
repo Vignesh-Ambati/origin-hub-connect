@@ -1,4 +1,5 @@
 import { ArrowRight, Github, Linkedin, Mail, Phone, Instagram, Twitter, Sparkles, Layers, Shield, Zap, LogIn, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
