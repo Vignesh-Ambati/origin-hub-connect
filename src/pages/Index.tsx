@@ -1,4 +1,5 @@
 import { ArrowRight, Github, Linkedin, Mail, Phone, Instagram, Twitter, Sparkles, Layers, Shield, Zap, LogIn, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -82,22 +83,26 @@ const Index = () => {
       <section id="features" className="relative z-10 mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { icon: Layers, title: "Unified", desc: "Bring every tool, contact and workflow into one luminous hub." },
-            { icon: Zap, title: "Instant", desc: "Connect to what matters in milliseconds. No friction, just flow." },
-            { icon: Shield, title: "Secure", desc: "End-to-end encryption with privacy-first architecture by default." },
+            { icon: Layers, title: "Unified", desc: "Bring every tool, contact and workflow into one luminous hub.", to: "/unified" },
+            { icon: Zap, title: "Instant", desc: "Connect to what matters in milliseconds. No friction, just flow.", to: "/instant" },
+            { icon: Shield, title: "Secure", desc: "End-to-end encryption with privacy-first architecture by default.", to: "/secure" },
           ].map((f, i) => (
-            <Card
-              key={f.title}
-              className="glass animate-fade-up group relative overflow-hidden border-primary/20 p-8 transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow"
-              style={{ animationDelay: `${0.1 * i}s` }}
-            >
-              <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/0 via-primary/0 to-accent/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <div className="mb-4 inline-grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-secondary/30 to-accent/30 ring-1 ring-primary/30">
-                <f.icon className="h-5 w-5 text-foreground" />
-              </div>
-              <h3 className="font-display text-xl font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
-            </Card>
+            <Link key={f.title} to={f.to}>
+              <Card
+                className="glass animate-fade-up group relative h-full overflow-hidden border-primary/20 p-8 transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow"
+                style={{ animationDelay: `${0.1 * i}s` }}
+              >
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/0 via-primary/0 to-accent/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="mb-4 inline-grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-secondary/30 to-accent/30 ring-1 ring-primary/30">
+                  <f.icon className="h-5 w-5 text-foreground" />
+                </div>
+                <h3 className="font-display text-xl font-semibold">{f.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+                <p className="mt-4 inline-flex items-center gap-1 text-sm text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                  Explore <ArrowRight className="h-3.5 w-3.5" />
+                </p>
+              </Card>
+            </Link>
           ))}
         </div>
       </section>
@@ -186,10 +191,10 @@ const Index = () => {
                 About the Dev
               </h4>
               <ul className="mt-4 space-y-2 text-sm">
-                <li><a href="#about" className="text-foreground/80 transition-colors hover:text-foreground">About</a></li>
-                <li><a href="#" className="text-foreground/80 transition-colors hover:text-foreground">Portfolio</a></li>
-                <li><a href="#" className="text-foreground/80 transition-colors hover:text-foreground">Projects</a></li>
-                <li><a href="#" className="text-foreground/80 transition-colors hover:text-foreground">Blog</a></li>
+                <li><Link to="/about" className="text-foreground/80 transition-colors hover:text-foreground">About</Link></li>
+                <li><Link to="/portfolio" className="text-foreground/80 transition-colors hover:text-foreground">Portfolio</Link></li>
+                <li><Link to="/projects" className="text-foreground/80 transition-colors hover:text-foreground">Projects</Link></li>
+                <li><Link to="/blog" className="text-foreground/80 transition-colors hover:text-foreground">Blog</Link></li>
               </ul>
             </div>
 
