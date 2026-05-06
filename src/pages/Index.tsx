@@ -23,15 +23,15 @@ const Index = () => {
             </span>
             <span className="text-gradient">Origin Hub</span>
           </a>
-          <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
+          <div className="hidden items-center gap-8 text-base text-muted-foreground md:flex">
             <a href="#about" className="transition-colors hover:text-foreground">About</a>
             <a href="#features" className="transition-colors hover:text-foreground">Features</a>
             <a href="#auth" className="transition-colors hover:text-foreground">Login</a>
             <a href="#contact" className="transition-colors hover:text-foreground">Contact</a>
           </div>
-          <Button asChild variant="outline" size="sm" className="border-primary/40 bg-transparent hover:bg-primary/10">
+          {/* <Button asChild variant="outline" size="sm" className="border-primary/40 bg-transparent hover:bg-primary/10">
             <a href="#auth">Get Started</a>
-          </Button>
+          </Button> */}
         </nav>
       </header>
 
@@ -39,7 +39,7 @@ const Index = () => {
       <section className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 pb-24 pt-16 text-center md:pt-28">
         <div className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
           <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-accent" />
-          Welcome to the network
+          Welcome to Origin Hub....
         </div>
 
         <h1
@@ -83,9 +83,24 @@ const Index = () => {
       <section id="features" className="relative z-10 mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { icon: Layers, title: "Unified", desc: "Bring every tool, contact and workflow into one luminous hub.", to: "/unified" },
-            { icon: Zap, title: "Instant", desc: "Connect to what matters in milliseconds. No friction, just flow.", to: "/instant" },
-            { icon: Shield, title: "Secure", desc: "End-to-end encryption with privacy-first architecture by default.", to: "/secure" },
+            {
+              icon: Layers,
+              title: "Smart Workspace",
+              desc: "Create a fully customizable workspace where your tools, services, and workflows live in one place. Organize everything into structured layouts that adapt to your working style, reducing clutter and eliminating the need to switch between multiple applications.",
+              to: "/workspace"
+            },
+            {
+              icon: Zap,
+              title: "Quick Actions",
+              desc: "Execute tasks instantly with intelligent shortcuts, unified search, and context-aware actions. Whether you're launching tools, navigating workflows, or triggering operations, everything happens in milliseconds with minimal friction.",
+              to: "/actions"
+            },
+            {
+              icon: Shield,
+              title: "Secure Vault",
+              desc: "Store and manage credentials, sensitive data, and service connections within a secure, encrypted environment. Built with a privacy-first approach, giving you full control over access while ensuring your data remains protected at all times.",
+              to: "/vault"
+            },
           ].map((f, i) => (
             <Link key={f.title} to={f.to}>
               <Card
@@ -108,14 +123,57 @@ const Index = () => {
       </section>
 
       {/* About */}
-      <section id="about" className="relative z-10 mx-auto max-w-5xl px-6 py-20 text-center">
-        <h2 className="font-display text-4xl font-bold md:text-5xl">
-          One <span className="text-gradient">origin</span>. Every connection.
-        </h2>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          Origin Hub is a constellation of services woven into a single, beautiful experience.
-          From identity to communication, productivity to play — every node lights up the moment you arrive.
+      <section id="about" className="relative z-10 mx-auto max-w-6xl px-6 py-28 text-center">
+        <div className="space-y-8">
+          <h2 className="font-display text-4xl font-bold leading-tight md:text-6xl">
+            One <span className="text-gradient">origin</span>. Infinite possibilities.
+          </h2>
+
+          <p className="mx-auto max-w-4xl text-xl leading-relaxed text-muted-foreground">
+            Origin Hub is being built as a unified digital ecosystem — a single intelligent layer
+            where workflows, tools, communication, and identity come together without fragmentation.
+            In a world filled with disconnected platforms and constant context switching, Origin Hub
+            reimagines how digital interaction should feel: fluid, intentional, and deeply connected.
+          </p>
+
+          <p className="mx-auto max-w-4xl text-lg leading-relaxed text-muted-foreground/90">
+            Instead of forcing users to adapt to scattered systems, Origin Hub adapts to the way
+            people naturally think and work. It is designed to reduce friction, simplify complexity,
+            and create an environment where access, action, and insight happen seamlessly.
+          </p>
+        </div>
+
+        {/* Vision Statement */}
+        <div className="mt-20 rounded-3xl border border-primary/20 bg-background/40 p-10 backdrop-blur-xl shadow-glow">
+          <h3 className="font-display text-2xl font-semibold md:text-3xl">
+            Building the future of connected digital experiences
+          </h3>
+
+          <p className="mx-auto mt-6 max-w-4xl text-lg text-muted-foreground leading-relaxed">
+            Origin Hub is currently in active development, with each iteration focused on creating
+            a more intelligent, secure, and adaptable platform. Every component is being designed
+            with long-term scalability in mind — from seamless integrations and modular workflows
+            to privacy-first architecture and performance-driven systems.
+          </p>
+
+          <p className="mx-auto mt-6 max-w-4xl text-lg text-muted-foreground leading-relaxed">
+            This is more than a product in progress. It is an evolving foundation for a digital
+            ecosystem where every connection has purpose, every interaction has context, and every
+            experience begins from one unified origin.
+          </p>
+        </div>
+
+      {/* Development Status */}
+      <div className="mt-16 flex flex-col items-center gap-4">
+        <span className="rounded-full border border-accent/30 bg-accent/10 px-5 py-2 text-sm font-medium text-accent">
+          Currently in Development
+        </span>
+
+        <p className="max-w-2xl text-sm italic text-muted-foreground">
+        Origin Hub is currently under active development. Features are evolving rapidly as we shape
+          a more connected, efficient, and intelligent ecosystem.
         </p>
+      </div>
       </section>
 
       {/* Auth */}
@@ -136,6 +194,26 @@ const Index = () => {
             </TabsList>
 
             <TabsContent value="login" className="mt-6 space-y-4">
+              {/* Google Login */}
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-100"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="h-5 w-5"
+                />
+                Continue with Google
+              </Button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-2">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-xs text-muted-foreground">OR</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
                 <Input id="login-email" type="email" placeholder="you@origin.hub" className="bg-input/60" />
@@ -164,6 +242,25 @@ const Index = () => {
               </div>
               <Button className="w-full bg-gradient-to-r from-primary via-accent to-secondary shadow-glow hover:opacity-90">
                 Create account <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+              {/* Divider */}
+              <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs text-muted-foreground">OR</span>
+              <div className="h-px flex-1 bg-border" />
+              </div>
+
+              {/* Google Login */}
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 bg-white text-black hover:bg-gray-100"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="h-5 w-5"
+                />
+                Continue with Google
               </Button>
             </TabsContent>
           </Tabs>
@@ -194,7 +291,7 @@ const Index = () => {
                 <li><Link to="/about" className="text-foreground/80 transition-colors hover:text-foreground">About</Link></li>
                 <li><Link to="/portfolio" className="text-foreground/80 transition-colors hover:text-foreground">Portfolio</Link></li>
                 <li><Link to="/projects" className="text-foreground/80 transition-colors hover:text-foreground">Projects</Link></li>
-                <li><Link to="/blog" className="text-foreground/80 transition-colors hover:text-foreground">Blog</Link></li>
+                <li><Link to="/Lab_Gallery" className="text-foreground/80 transition-colors hover:text-foreground">Labs</Link></li>
               </ul>
             </div>
 
@@ -205,20 +302,18 @@ const Index = () => {
               <ul className="mt-4 space-y-2 text-sm">
                 <li className="flex items-center gap-2 text-foreground/80">
                   <Mail className="h-4 w-4 text-primary" />
-                  <a href="mailto:hello@originhub.dev" className="hover:text-foreground">hello@originhub.dev</a>
+                  <a href="mailto:saivigneswar123123@gmail.com" className="hover:text-foreground">saivigneswar123123@gmail.com</a>
                 </li>
                 <li className="flex items-center gap-2 text-foreground/80">
                   <Phone className="h-4 w-4 text-primary" />
-                  <a href="tel:+10000000000" className="hover:text-foreground">+1 (000) 000-0000</a>
+                  <a href="tel:+917674898208" className="hover:text-foreground">+91-7674898208</a>
                 </li>
               </ul>
               <div className="mt-5 flex items-center gap-3">
                 {[
-                  { icon: Linkedin, href: "#", label: "LinkedIn" },
-                  { icon: Mail, href: "mailto:hello@originhub.dev", label: "Email" },
-                  { icon: Instagram, href: "#", label: "Instagram" },
-                  { icon: Twitter, href: "#", label: "Twitter" },
-                  { icon: Github, href: "#", label: "GitHub" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/vigneshambati/", label: "LinkedIn" },
+                  { icon: Mail, href: "mailto:saivigneswar123123@gmail.com", label: "Email" },
+                  { icon: Github, href: "https://github.com/Vignesh-Ambati", label: "GitHub" },
                 ].map(({ icon: Icon, href, label }) => (
                   <a
                     key={label}
@@ -234,7 +329,7 @@ const Index = () => {
           </div>
 
           <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-border/50 pt-6 text-xs text-muted-foreground md:flex-row">
-            <p>© {year} Origin Hub. Crafted with care.</p>
+            <p>© {year} Origin Hub. Crafted and Designed For Need.</p>
             <p>Where all your needs connect.</p>
           </div>
         </div>

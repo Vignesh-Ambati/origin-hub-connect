@@ -3,26 +3,43 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const projects = [
-  { title: "Origin Hub Core", status: "In Progress", desc: "The constellation engine — the unifying layer that powers every node.", stack: ["React", "TypeScript", "Edge"] },
-  { title: "Hub Mobile", status: "Beta", desc: "Native companion for iOS & Android with offline-first sync.", stack: ["React Native", "Expo"] },
-  { title: "Hub Connect", status: "Planning", desc: "Plugin SDK so anyone can bring their own service into the hub.", stack: ["TS SDK", "OAuth"] },
-  { title: "Hub Insights", status: "Concept", desc: "Personal analytics dashboard with privacy-respecting telemetry.", stack: ["DuckDB", "WASM"] },
+  {
+    title: "Origin Hub (Core System)",
+    status: "Active Development",
+    desc: "A central system designed to act as an integration layer for multiple tools and workflows. The goal is to connect standalone utilities and applications into a unified interface where tools can be accessed and extended from a single platform.",
+    stack: ["React", "TypeScript", "System Design"],
+  },
+  {
+    title: "NMEA Analyzer",
+    status: "Ongoing",
+    desc: "A data parsing tool for analyzing structured NMEA GPS streams. Focused on decoding, validation, and interpretation of real-time navigation data with plans for integration into Origin Hub as a connected tool.",
+    stack: ["Python", "Data Parsing", "Protocols"],
+  },
+  {
+    title: "Final Year Project — Helmet Detection System",
+    status: "Completed",
+    desc: "Computer vision-based system for detecting helmet usage in riders using YOLO-based object detection. Designed for identifying both rider and pillion helmet compliance using video/image input.",
+    stack: ["Python", "YOLO", "Computer Vision"],
+  },
 ];
 
 const statusTone: Record<string, string> = {
-  "In Progress": "bg-primary/20 text-primary-foreground border-primary/40",
-  Beta: "bg-accent/20 text-accent-foreground border-accent/40",
-  Planning: "bg-secondary/20 text-secondary-foreground border-secondary/40",
-  Concept: "bg-muted text-muted-foreground border-border",
+  "Active Development": "bg-primary/20 text-primary-foreground border-primary/40",
+  Ongoing: "bg-accent/20 text-accent-foreground border-accent/40",
+  Completed: "bg-secondary/20 text-secondary-foreground border-secondary/40",
 };
 
 const Projects = () => (
   <PageShell
-    eyebrow="Active Projects"
-    title={<>What I'm <span className="text-gradient">building</span> now</>}
-    subtitle="A live snapshot of the work happening inside the workshop."
+    eyebrow="Projects"
+    title={
+      <>
+        Systems & <span className="text-gradient">Tools</span>
+      </>
+    }
+    subtitle="A mix of core system design work, standalone engineering tools, and academic projects."
     prev={{ label: "Portfolio", to: "/portfolio" }}
-    next={{ label: "Read the Blog", to: "/blog" }}
+    next={{ label: "Lab_Gallery", to: "/Lab_Gallery" }}
   >
     <div className="grid gap-6 md:grid-cols-2">
       {projects.map((p, i) => (
@@ -32,13 +49,25 @@ const Projects = () => (
           style={{ animationDelay: `${0.08 * i}s` }}
         >
           <div className="flex items-start justify-between gap-3">
-            <h3 className="font-display text-xl font-semibold">{p.title}</h3>
-            <Badge variant="outline" className={statusTone[p.status]}>{p.status}</Badge>
+            <h3 className="font-display text-xl font-semibold">
+              {p.title}
+            </h3>
+
+            <Badge variant="outline" className={statusTone[p.status]}>
+              {p.status}
+            </Badge>
           </div>
-          <p className="mt-2 text-sm text-muted-foreground">{p.desc}</p>
+
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            {p.desc}
+          </p>
+
           <div className="mt-4 flex flex-wrap gap-2">
             {p.stack.map((s) => (
-              <span key={s} className="rounded-md border border-border bg-card/40 px-2 py-0.5 text-xs text-muted-foreground">
+              <span
+                key={s}
+                className="rounded-md border border-border bg-card/40 px-2 py-0.5 text-xs text-muted-foreground"
+              >
                 {s}
               </span>
             ))}
