@@ -1,382 +1,337 @@
 import PageShell from "@/components/PageShell";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 
 const projects = [
   {
     title: "Origin Hub UI Evolution",
     images: [
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&q=80",
-      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&q=80",
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80",
-      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=900&q=80",
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80",
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1600&q=80",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80",
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80",
+      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1600&q=80",
     ],
   },
   {
     title: "NMEA Analyser Output",
     images: [
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80",
-      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&q=80",
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80",
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=80",
-      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=900&q=80",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80",
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80",
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80",
+      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1600&q=80",
     ],
   },
   {
     title: "Backend Flow Experiments",
     images: [
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80",
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&q=80",
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=80",
-      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&q=80",
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80",
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1600&q=80",
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80",
     ],
   },
 ];
 
-const AUTO_MS = 2800;
-const PAUSE_MS = 2500;
+const AUTO_SCROLL_MS = 3500;
+const RESUME_DELAY_MS = 4500;
 
 const Lab_Gallery = () => {
-  const [pIndex, setPIndex] = useState(0);
-  const [iIndex, setIIndex] = useState(0);
+  const [projectIndex, setProjectIndex] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const pauseRef = useRef(null);
 
-  const activeProject = projects[pIndex];
+  const resumeRef = useRef<NodeJS.Timeout | null>(null);
 
-  const tempPause = useCallback(() => {
+  const activeProject = projects[projectIndex];
+
+  const pauseAutoScroll = useCallback(() => {
     setPaused(true);
-    if (pauseRef.current) clearTimeout(pauseRef.current);
-    pauseRef.current = setTimeout(() => setPaused(false), PAUSE_MS);
+
+    if (resumeRef.current) {
+      clearTimeout(resumeRef.current);
+    }
+
+    resumeRef.current = setTimeout(() => {
+      setPaused(false);
+    }, RESUME_DELAY_MS);
   }, []);
 
-  const advanceAuto = useCallback(() => {
-    setIIndex((i) => {
-      if (i < projects[pIndex].images.length - 1) return i + 1;
-      setPIndex((p) => (p + 1) % projects.length);
+  const nextImage = useCallback(() => {
+    setImageIndex((prev) => {
+      if (prev < activeProject.images.length - 1) {
+        return prev + 1;
+      }
+
+      setProjectIndex((p) => (p + 1) % projects.length);
       return 0;
     });
-  }, [pIndex]);
+  }, [activeProject.images.length]);
 
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(advanceAuto, AUTO_MS);
-    return () => clearInterval(t);
-  }, [paused, advanceAuto]);
 
-  const selectProject = (idx) => {
-    tempPause();
-    setPIndex(idx);
-    setIIndex(0);
+    const interval = setInterval(() => {
+      nextImage();
+    }, AUTO_SCROLL_MS);
+
+    return () => clearInterval(interval);
+  }, [paused, nextImage]);
+
+  const changeProject = (idx: number) => {
+    pauseAutoScroll();
+    setProjectIndex(idx);
+    setImageIndex(0);
   };
 
   const prevProject = () => {
-    tempPause();
-    setPIndex((p) => (p - 1 + projects.length) % projects.length);
-    setIIndex(0);
+    pauseAutoScroll();
+
+    setProjectIndex((prev) => {
+      const next = (prev - 1 + projects.length) % projects.length;
+      return next;
+    });
+
+    setImageIndex(0);
   };
 
   const nextProject = () => {
-    tempPause();
-    setPIndex((p) => (p + 1) % projects.length);
-    setIIndex(0);
+    pauseAutoScroll();
+
+    setProjectIndex((prev) => {
+      const next = (prev + 1) % projects.length;
+      return next;
+    });
+
+    setImageIndex(0);
   };
 
-  const prevImage = () => {
-    tempPause();
-    setIIndex((i) => (i - 1 + activeProject.images.length) % activeProject.images.length);
+  const previousImage = () => {
+    pauseAutoScroll();
+
+    setImageIndex((prev) =>
+      prev === 0 ? activeProject.images.length - 1 : prev - 1
+    );
   };
 
-  const nextImage = () => {
-    tempPause();
-    setIIndex((i) => (i + 1) % activeProject.images.length);
-  };
+  const forwardImage = () => {
+    pauseAutoScroll();
 
-  const goToImage = (idx) => {
-    tempPause();
-    setIIndex(idx);
+    setImageIndex((prev) =>
+      prev === activeProject.images.length - 1 ? 0 : prev + 1
+    );
   };
 
   return (
     <PageShell
-      eyebrow="Lab Console"
-      title={<>Experiment <span className="text-gradient">Stream</span></>}
-      subtitle="Auto-driven visual system showing live experimental outputs."
+      eyebrow="Lab Gallery"
+      title={
+        <>
+          Experimental <span className="text-gradient">visual stream</span>
+        </>
+      }
+      subtitle="A visual console of ongoing experiments, interfaces, workflows, and system explorations across Origin Hub and related projects."
+      prev={{ label: "Projects", to: "/projects" }}
+      next={{ label: "Back Home", to: "/" }}
     >
-      <div
-        className="grid overflow-hidden rounded-2xl border border-white/5"
-        style={{ gridTemplateColumns: "220px 1fr", height: "80vh", background: "#0a0a0b" }}
-      >
-        {/* SIDEBAR */}
-        <div
-          className="flex flex-col"
-          style={{ background: "#111113", borderRight: "1px solid #242428" }}
-        >
-          {/* Header */}
-          <div className="px-5 py-4" style={{ borderBottom: "1px solid #1e1e22" }}>
-            <p
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.15em",
-                color: "#555560",
-                textTransform: "uppercase",
-                marginBottom: 3,
-              }}
-            >
-              Projects
-            </p>
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#c8c6c0" }}>
-              Experiment Stream
-            </p>
-          </div>
-
-          {/* Project list */}
-          <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-1.5">
-            {projects.map((p, i) => (
-              <button
-                key={p.title}
-                onClick={() => selectProject(i)}
-                className="relative text-left rounded-lg px-3 py-2.5 w-full transition-all duration-200"
-                style={{
-                  background: i === pIndex ? "#1c1c22" : "transparent",
-                  border: `1px solid ${i === pIndex ? "#2e2e38" : "transparent"}`,
-                  opacity: i === pIndex ? 1 : 0.4,
-                  cursor: "pointer",
-                }}
-              >
-                {i === pIndex && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: 0,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      width: 2,
-                      height: "55%",
-                      background: "#6b6bff",
-                      borderRadius: 2,
-                    }}
-                  />
-                )}
-                <p
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: 10,
-                    color: i === pIndex ? "#6b6bff" : "#44444e",
-                    marginBottom: 2,
-                  }}
-                >
-                  0{i + 1}
+      <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-background/40 backdrop-blur-xl">
+        <div className="grid min-h-[78vh] lg:grid-cols-[300px_1fr]">
+          {/* LEFT SIDEBAR */}
+          <aside className="relative border-b border-border/30 bg-black/20 lg:border-b-0 lg:border-r">
+            <div className="flex h-full flex-col">
+              {/* HEADER */}
+              <div className="border-b border-border/30 px-6 py-6">
+                <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                  Active Streams
                 </p>
-                <p
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 500,
-                    color: i === pIndex ? "#e2e0d8" : "#b0aead",
-                    lineHeight: 1.4,
-                  }}
+
+                <h3 className="mt-2 text-lg font-semibold text-foreground">
+                  Project Console
+                </h3>
+              </div>
+
+              {/* PROJECT LIST */}
+              <div className="flex-1 space-y-3 overflow-hidden px-4 py-5">
+                {projects.map((project, idx) => {
+                  const active = idx === projectIndex;
+
+                  return (
+                    <button
+                      key={project.title}
+                      onClick={() => changeProject(idx)}
+                      className={`group relative w-full overflow-hidden rounded-2xl border p-5 text-left transition-all duration-300 ${
+                        active
+                          ? "border-primary/40 bg-primary/10 shadow-[0_0_30px_rgba(120,120,255,0.12)]"
+                          : "border-border/30 bg-background/20 hover:border-primary/20 hover:bg-background/40"
+                      }`}
+                    >
+                      <div
+                        className={`absolute left-0 top-0 h-full w-1 rounded-full transition-all ${
+                          active ? "bg-primary" : "bg-transparent"
+                        }`}
+                      />
+
+                      <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                        {String(idx + 1).padStart(2, "0")}
+                      </p>
+
+                      <h4
+                        className={`mt-2 text-sm font-medium leading-relaxed transition-colors ${
+                          active
+                            ? "text-foreground"
+                            : "text-muted-foreground group-hover:text-foreground"
+                        }`}
+                      >
+                        {project.title}
+                      </h4>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* NAVIGATION */}
+              <div className="flex gap-3 border-t border-border/30 p-4">
+                <button
+                  onClick={prevProject}
+                  className="flex h-12 flex-1 items-center justify-center rounded-xl border border-border/30 bg-background/40 transition-all hover:border-primary/30 hover:bg-primary/10"
                 >
-                  {p.title}
+                  <ChevronUp className="h-5 w-5" />
+                </button>
+
+                <button
+                  onClick={nextProject}
+                  className="flex h-12 flex-1 items-center justify-center rounded-xl border border-border/30 bg-background/40 transition-all hover:border-primary/30 hover:bg-primary/10"
+                >
+                  <ChevronDown className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          {/* RIGHT VIEWER */}
+          <section className="relative flex flex-col">
+            {/* TOP BAR */}
+            <div className="flex items-center justify-between border-b border-border/30 px-5 py-5 sm:px-8">
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                  Current Preview
                 </p>
-              </button>
-            ))}
-          </div>
 
-          {/* Prev / Next project nav */}
-          <div
-            className="flex gap-1.5 p-3"
-            style={{ borderTop: "1px solid #1e1e22" }}
-          >
-            {[
-              { label: "↑", action: prevProject, aria: "Previous project" },
-              { label: "↓", action: nextProject, aria: "Next project" },
-            ].map(({ label, action, aria }) => (
+                <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
+                  {activeProject.title}
+                </h2>
+              </div>
+
+              <div className="hidden items-center gap-2 rounded-full border border-border/30 bg-background/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-muted-foreground sm:flex">
+                <span
+                  className={`h-2 w-2 rounded-full ${
+                    paused ? "bg-muted" : "bg-primary"
+                  }`}
+                />
+
+                {paused ? "Paused" : "Live"}
+              </div>
+            </div>
+
+            {/* IMAGE AREA */}
+            <div className="relative flex-1 overflow-hidden">
+              {/* LEFT ARROW */}
               <button
-                key={aria}
-                onClick={action}
-                aria-label={aria}
-                className="flex-1 flex items-center justify-center rounded-md transition-all duration-150"
-                style={{
-                  background: "#1a1a1f",
-                  border: "1px solid #2a2a30",
-                  color: "#888",
-                  padding: "8px 0",
-                  fontSize: 15,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#222228";
-                  e.currentTarget.style.color = "#ddd";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#1a1a1f";
-                  e.currentTarget.style.color = "#888";
-                }}
+                onClick={previousImage}
+                className="absolute left-3 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-border/30 bg-black/50 opacity-0 backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-primary/40 hover:bg-black/70 group-hover:opacity-100 md:left-6"
               >
-                {label}
+                <ChevronLeft className="h-6 w-6" />
               </button>
-            ))}
-          </div>
-        </div>
 
-        {/* VIEWER */}
-        <div className="flex flex-col overflow-hidden">
-          {/* Viewer header */}
-          <div
-            className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-            style={{ borderBottom: "1px solid #1a1a1e" }}
-          >
-            <p style={{ fontSize: 15, fontWeight: 600, color: "#e0deda", letterSpacing: "0.01em" }}>
-              {activeProject.title}
-            </p>
-            <p style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#44444e", letterSpacing: "0.05em" }}>
-              {String(iIndex + 1).padStart(2, "0")} / {String(activeProject.images.length).padStart(2, "0")}
-            </p>
-          </div>
+              {/* RIGHT ARROW */}
+              <button
+                onClick={forwardImage}
+                className="absolute right-3 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-border/30 bg-black/50 opacity-0 backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:border-primary/40 hover:bg-black/70 group-hover:opacity-100 md:right-6"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
 
-          {/* Image stage */}
-          <div className="flex-1 relative overflow-hidden">
-            {/* Left arrow */}
-            <button
-              onClick={prevImage}
-              aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full transition-all duration-150"
-              style={{
-                width: 36, height: 36,
-                background: "rgba(15,15,18,0.85)",
-                border: "1px solid #2e2e38",
-                color: "#aaa",
-                fontSize: 16,
-                cursor: "pointer",
-                backdropFilter: "blur(8px)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(30,30,38,0.95)";
-                e.currentTarget.style.color = "#fff";
-                e.currentTarget.style.borderColor = "#5050ff";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(15,15,18,0.85)";
-                e.currentTarget.style.color = "#aaa";
-                e.currentTarget.style.borderColor = "#2e2e38";
-              }}
-            >
-              ←
-            </button>
-
-            {/* Right arrow */}
-            <button
-              onClick={nextImage}
-              aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full transition-all duration-150"
-              style={{
-                width: 36, height: 36,
-                background: "rgba(15,15,18,0.85)",
-                border: "1px solid #2e2e38",
-                color: "#aaa",
-                fontSize: 16,
-                cursor: "pointer",
-                backdropFilter: "blur(8px)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(30,30,38,0.95)";
-                e.currentTarget.style.color = "#fff";
-                e.currentTarget.style.borderColor = "#5050ff";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(15,15,18,0.85)";
-                e.currentTarget.style.color = "#aaa";
-                e.currentTarget.style.borderColor = "#2e2e38";
-              }}
-            >
-              →
-            </button>
-
-            {/* Image track — FIX: each slide is 100% of stage width, track translates by iIndex * 100% */}
-            <div
-              className="flex h-full"
-              style={{
-                width: `${activeProject.images.length * 100}%`,
-                transform: `translateX(-${(iIndex / activeProject.images.length) * 100}%)`,
-                transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-                willChange: "transform",
-              }}
-            >
-              {activeProject.images.map((src, i) => (
+              {/* IMAGE SLIDER */}
+              <div className="group relative h-full w-full overflow-hidden">
                 <div
-                  key={i}
-                  className="flex items-center justify-center"
-                  style={{ width: `${100 / activeProject.images.length}%`, height: "100%", padding: "20px 44px" }}
+                  className="flex h-full transition-transform duration-700 ease-out"
+                  style={{
+                    transform: `translateX(-${imageIndex * 88}%)`,
+                  }}
                 >
-                  <img
-                    src={src}
-                    alt={`${activeProject.title} image ${i + 1}`}
-                    loading="lazy"
-                    className="rounded-xl w-full h-full"
-                    style={{ objectFit: "cover", border: "1px solid #1e1e24" }}
-                  />
+                  {activeProject.images.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className="flex h-full w-[88%] flex-shrink-0 items-center justify-center px-4 py-4 sm:px-6 sm:py-6"
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-3xl border border-border/20 bg-black">
+                        <img
+                          src={img}
+                          alt={`${activeProject.title}-${idx}`}
+                          className="h-full w-full object-cover"
+                        />
+
+                        {/* OVERLAY */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <p className="text-xs uppercase tracking-[0.2em] text-primary/80">
+                            Experiment Snapshot
+                          </p>
+
+                          <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
+                            {activeProject.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
 
-          {/* Footer — dots + auto status */}
-          <div
-            className="flex items-center gap-2 px-6 py-3 flex-shrink-0"
-            style={{ borderTop: "1px solid #1a1a1e" }}
-          >
-            {activeProject.images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goToImage(i)}
-                aria-label={`Go to image ${i + 1}`}
-                style={{
-                  width: i === iIndex ? 18 : 5,
-                  height: 5,
-                  borderRadius: i === iIndex ? 3 : "50%",
-                  background: i === iIndex ? "#6b6bff" : "#333338",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  flexShrink: 0,
-                  padding: 0,
-                }}
-              />
-            ))}
+            {/* FOOTER */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/30 px-5 py-4 sm:px-8">
+              {/* DOTS */}
+              <div className="flex items-center gap-2">
+                {activeProject.images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      pauseAutoScroll();
+                      setImageIndex(idx);
+                    }}
+                    className={`transition-all duration-300 ${
+                      idx === imageIndex
+                        ? "h-2 w-10 rounded-full bg-primary"
+                        : "h-2 w-2 rounded-full bg-muted"
+                    }`}
+                  />
+                ))}
+              </div>
 
-            <div
-              className="ml-auto flex items-center gap-1.5"
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 10,
-                color: "#33333a",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              <span
-                style={{
-                  width: 5, height: 5,
-                  borderRadius: "50%",
-                  background: paused ? "#333" : "#6b6bff",
-                  animation: paused ? "none" : "glowPulse 1.8s ease-in-out infinite",
-                  flexShrink: 0,
-                }}
-              />
-              {paused ? "paused" : "auto"}
+              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <span>
+                  {String(imageIndex + 1).padStart(2, "0")}
+                </span>
+
+                <span className="opacity-40">/</span>
+
+                <span>
+                  {String(activeProject.images.length).padStart(2, "0")}
+                </span>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
-
-      <style>{`
-        @keyframes glowPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-      `}</style>
     </PageShell>
   );
 };
