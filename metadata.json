@@ -1,0 +1,8 @@
+{
+  "name": "Origin-Hub",
+  "description": "Origin-Hub is where all your needs connect. A luminous, unified hub for every tool, contact, and workflow.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
