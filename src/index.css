@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Soft off-white neutral page background */
+    --background: 210 20% 98%;
+    /* Dark slate text (WCAG AA compliant contrast > 13:1) */
+    --foreground: 222 47% 11%;
+
+    /* Crisp white content surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Restrained professional blue */
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Subtle slate secondary */
+    --secondary: 214 20% 94%;
+    --secondary-foreground: 222 47% 15%;
+
+    /* Soft muted elements */
+    --muted: 214 20% 94%;
+    --muted-foreground: 215 16% 45%;
+
+    /* Restrained teal accent */
+    --accent: 180 75% 36%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Muted clean borders and inputs */
+    --border: 214 32% 90%;
+    --input: 214 32% 90%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.75rem;
+
+    /* Enterprise subtle gradients */
+    --gradient-brand: linear-gradient(135deg, hsl(221 83% 53%), hsl(200 85% 45%), hsl(180 75% 36%));
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
+
+    /* Restrained SaaS shadows */
+    --shadow-soft: 0 1px 3px 0 rgb(15 23 42 / 0.05), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+    --shadow-elegant: 0 10px 25px -5px rgb(15 23 42 / 0.06), 0 8px 10px -6px rgb(15 23 42 / 0.04);
+    --shadow-glow: 0 0 0 1px rgb(37 99 235 / 0.1), 0 4px 14px 0 rgb(37 99 235 / 0.08);
+
+    --glass-bg: hsl(0 0% 100% / 0.9);
+    --glass-border: hsl(214 32% 90%);
+  }
+
+  .dark {
+    /* Charcoal / slate background (not pitch black) */
+    --background: 222 47% 11%;
+    /* Readable clean slate text */
+    --foreground: 210 20% 96%;
+
+    /* Distinct subtle surface layer */
+    --card: 220 28% 14%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 220 28% 14%;
+    --popover-foreground: 210 20% 96%;
+
+    /* Restrained enterprise blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    /* Dark surface secondary */
+    --secondary: 217 22% 20%;
+    --secondary-foreground: 210 20% 96%;
+
+    /* Muted elements with accessible contrast */
+    --muted: 217 22% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Restrained teal accent */
+    --accent: 173 80% 40%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 63% 51%;
+    --destructive-foreground: 210 20% 98%;
+
+    /* Muted borders without excessive contrast */
+    --border: 217 22% 22%;
+    --input: 217 22% 20%;
+    --ring: 217 91% 60%;
+
+    /* Enterprise subtle gradients for dark mode */
+    --gradient-brand: linear-gradient(135deg, hsl(217 91% 65%), hsl(199 89% 60%), hsl(173 80% 55%));
+    --gradient-surface: linear-gradient(180deg, hsl(220 28% 14%), hsl(222 47% 11%));
+
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+    --shadow-elegant: 0 10px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    --shadow-glow: 0 0 0 1px rgb(59 130 246 / 0.2), 0 4px 14px 0 rgb(59 130 246 / 0.12);
+
+    --glass-bg: hsl(220 28% 14% / 0.85);
+    --glass-border: hsl(217 22% 24%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-elegant { box-shadow: var(--shadow-elegant); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+
+  .glass {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glow-ring {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.15);
+  }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pulse-glow {
+  animation: pulse-subtle 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
